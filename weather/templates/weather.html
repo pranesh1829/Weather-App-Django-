@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Weather</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #c2f0c2, #e0f7fa);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
+        nav {
+            background: linear-gradient(90deg, #38b000, #007f5f);
+            padding: 25px 0;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-weight: bold;
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .form-container {
+            margin-top: 60px;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-default {
+            background-color: #00b894;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+
+        .btn-default:hover {
+            background-color: #009874;
+            color: white;
+        }
+
+        .weather-results h3,
+        .weather-results h5 {
+            margin-top: 15px;
+            color: #2d3436;
+        }
+
+        .weather-results {
+            margin-top: 30px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .alert {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .alert::before {
+            font-family: 'Glyphicons Halflings';
+            padding-right: 10px;
+        }
+
+        .alert-danger::before {
+            content: "\e107";
+        }
+
+        .alert-info::before {
+            content: "\e086";
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="row text-center">
+        <h1 class="col-md-12">🌦️ Weather Forecast</h1>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 form-container">
+                <form method="post" class="text-center">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="city" placeholder="Enter city name..." required>
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit">
+                                <i class="glyphicon glyphicon-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="weather-results text-center">
+                    {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                    {% elif country_code and coordinate and temp and pressure and humidity %}
+                    <h3>📍 Country Code: <strong>{{ country_code }}</strong></h3>
+                    <h5>🗺️ Coordinates: <strong>{{ coordinate }}</strong></h5>
+                    <h5>🌡️ Temperature: <strong>{{ temp }}°C</strong></h5>
+                    <h5>🌬️ Pressure: <strong>{{ pressure }} hPa</strong></h5>
+                    <h5>💧 Humidity: <strong>{{ humidity }}%</strong></h5>
+                    {% else %}
+                    <div class="alert alert-info">
+                        Enter a city name to get the weather details.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
